@@ -6,8 +6,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ProcessStatus } from '../../common/enums';
 import { Command } from './command.entity';
+import { ProcessStatus } from './enums';
 
 @Entity('processes')
 @Index(['command_id', 'pid'])

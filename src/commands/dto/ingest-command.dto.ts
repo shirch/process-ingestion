@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { CommandType, OSType } from '../../common/enums';
+import { CommandType, OSType } from '../entities/enums';
 
 export class IngestCommandDto {
   @IsDateString()

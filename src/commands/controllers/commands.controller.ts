@@ -24,16 +24,13 @@ export class CommandsController {
 
       const result = await this.commandsService.ingestCommand(ingestCommandDto);
 
-      this.logger.log(
-        `Successfully processed command ${result.id} with ${result.process_count} processes`,
-      );
+      this.logger.log(`Successfully processed command ${result.id} `);
 
       return {
         success: true,
         message: 'Command processed successfully',
         data: {
           command_id: result.id,
-          process_count: result.process_count,
           processed_at: result.processed_at,
         },
       };
@@ -47,8 +44,6 @@ export class CommandsController {
         {
           success: false,
           error: error.message,
-          details:
-            process.env.NODE_ENV === 'development' ? error.stack : undefined,
         },
         HttpStatus.BAD_REQUEST,
       );

@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CommandType, OSType } from '../../common/enums';
+import { CommandType, OSType } from './enums';
 import { Process } from './process.entity';
 
 @Entity('commands')
@@ -44,9 +44,6 @@ export class Command {
 
   @Column({ type: 'text' })
   raw_output: string;
-
-  @Column({ type: 'int', default: 0 })
-  process_count: number;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   processed_at: Date;

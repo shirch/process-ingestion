@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CommandType, OSType, ProcessStatus } from '../../common/enums';
+import { CommandType, OSType, ProcessStatus } from '../entities/enums';
 import { Process } from '../entities/process.entity';
 
 interface ParsedProcess {
@@ -34,13 +34,17 @@ export class ParsingService {
 
     let parsedProcesses: ParsedProcess[] = [];
 
-    if (commandType === CommandType.PS) {
-      parsedProcesses = this.parsePsOutput(output, osType);
-    } else if (commandType === CommandType.TASKLIST) {
-      parsedProcesses = this.parseTasklistOutput(output);
-    } else {
+    const parserMap: Record<CommandType, (output: string) => ParsedProcess[]> =
+      {
+        [CommandType.PS]: (output) => this.parsePsOutput(output),
+        [CommandType.TASKLIST]: (output) => this.parseTasklistOutput(output),
+      };
+
+    const parser = parserMap[commandType];
+    if (!parser) {
       throw new Error(`Unsupported command type: ${commandType}`);
     }
+    parsedProcesses = parser(output);
 
     // Convert to Process entities
     return parsedProcesses.map((parsed) => {
@@ -65,7 +69,7 @@ export class ParsingService {
     });
   }
 
-  private parsePsOutput(output: string, osType: OSType): ParsedProcess[] {
+  private parsePsOutput(output: string): ParsedProcess[] {
     const lines = output.trim().split('\n');
     if (lines.length < 2) {
       throw new Error('Invalid ps output: missing header or data');

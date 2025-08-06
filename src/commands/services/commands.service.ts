@@ -33,37 +33,22 @@ export class CommandsService {
     // Save command first to get ID
     const savedCommand = await this.commandRepository.save(command);
 
-    try {
-      // Parse processes from command output
-      const processes = await this.parsingService.parseCommandOutput(
-        ingestCommandDto.command,
-        ingestCommandDto.os_type,
-        ingestCommandDto.output,
-        savedCommand.id,
-      );
+    // Parse processes from command output
+    const processes = await this.parsingService.parseCommandOutput(
+      ingestCommandDto.command,
+      ingestCommandDto.os_type,
+      ingestCommandDto.output,
+      savedCommand.id,
+    );
 
-      // Bulk insert processes
-      if (processes.length > 0) {
-        await this.processRepository.save(processes);
+    // Bulk insert processes
+    // For bigger datasets, consider splitting into chunks
+    await this.processRepository.save(processes);
 
-        // Update process count
-        savedCommand.process_count = processes.length;
-        await this.commandRepository.save(savedCommand);
-      }
+    this.logger.log(
+      `Successfully processed ${processes.length} processes for command ${savedCommand.id}`,
+    );
 
-      this.logger.log(
-        `Successfully processed ${processes.length} processes for command ${savedCommand.id}`,
-      );
-
-      return savedCommand;
-    } catch (error) {
-      this.logger.error(
-        `Failed to parse processes for command ${savedCommand.id}: ${error.message}`,
-      );
-
-      // Keep the command record but mark parsing failure in logs
-      // In production, you might want to have a status field
-      throw error;
-    }
+    return savedCommand;
   }
 }

@@ -8,7 +8,8 @@ import { ParsingService } from './services/parsing.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Command, Process])],
-  controllers: [CommandsController],
+  controllers: [CommandsController], // For handling HTTP requests
   providers: [CommandsService, ParsingService],
+  exports: [CommandsService], // Export for use by Kafka consumer
 })
 export class CommandsModule {}
