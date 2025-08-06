@@ -83,20 +83,28 @@ process-ingestion/
 │   ├── commands/
 │   │   ├── commands.module.ts
 │   │   ├── controllers/
-│   │   │   └── commands.controller.ts   # HTTP API for ingesting command outputs
+│   │   │   ├── commands.controller.ts   # HTTP API for ingesting command outputs
+│   │   │   └── commands.controller.spec.ts
 │   │   ├── services/
 │   │   │   ├── commands.service.ts     # Handles business logic for command ingestion
-│   │   │   └── parsing.service.ts      # Parses raw command output into structured process data
+│   │   │   ├── commands.service.spec.ts
+│   │   │   ├── parsing.service.ts      # Parses raw command output into structured process data
+│   │   │   ├── parsing.service.spec.ts
+│   │   │   └── parsers/
+│   │   │       ├── ps-parser.ts        # Parser for Unix/Linux ps command output
+│   │   │       └── tasklist-parser.ts  # Parser for Windows tasklist command output
 │   │   ├── entities/
 │   │   │   ├── command.entity.ts
 │   │   │   ├── process.entity.ts
+│   │   │   ├── parsed-process.interface.ts
 │   │   │   └── enums.ts
 │   │   └── dto/
 │   │       └── ingest-command.dto.ts   # DTO for input validations
 │   ├── kafka/
 │   │   ├── kafka.module.ts
 │   │   └── consumers/
-│   │       └── process-commands.consumer.ts   # Kafka consumer
+│   │       ├── process-commands.consumer.ts   # Kafka consumer
+│   │       └── process-commands.consumer.spec.ts
 │
 ├── docker-compose.yml
 ├── Dockerfile
