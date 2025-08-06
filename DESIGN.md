@@ -61,7 +61,8 @@ For detailed visual representations of the system architecture, see the comprehe
 commands:
   - id (UUID, PK)
   - timestamp (with timezone, indexed)
-  - machine_name, machine_id (indexed)
+  - machine_name
+  - machine_id (indexed)
   - os_type, os_version
   - command_type
   - s3_raw_output_path
@@ -77,7 +78,8 @@ processes:
   - cpu_percent, memory_percent
   - memory_usage, vsz, rss
   - status, start_time, cpu_time
-  - full_command (text search index)
+  - full_command
+  ...
 ```
 
 **Indexing Strategy**:
@@ -121,12 +123,6 @@ For detailed visual representations of the system architecture, see the comprehe
 
 - **TypeORM**: ORM for rapid development with decorators
 - **class-validator**: DTO validation
-
-#### Simplified Architecture
-
-```
-[File Upload API] -> [Kafka Topic] -> [Consumer Service] -> [PostgreSQL]
-```
 
 ## Implementation Decisions
 
