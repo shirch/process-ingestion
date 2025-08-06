@@ -1,0 +1,21 @@
+graph TB
+    
+    subgraph "Message Queue"
+        KT[Kafka Topic<br/>process-commands]
+    end
+    
+    subgraph "Processing Service"
+        CS[Consumer Service<br/>Command Parser & Validator]
+
+    end
+    
+    subgraph "Database"
+        DB[(PostgreSQL<br/>Commands & Processes)]
+    end
+
+    KT --> CS
+    CS --> DB   
+
+    style KT fill:#4ecdc4
+    style CS fill:#45b7d1
+    style DB fill:#e67e22

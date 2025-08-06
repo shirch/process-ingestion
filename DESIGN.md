@@ -8,13 +8,7 @@ A system designed to ingest, store, and query process data from multiple operati
 
 ### High-Scale Production Design
 
-#### Core Components
-
-```
-[Data Collectors] -> [Kafka] -> [Processing Workers] -> [Storage Layer] -> [Query Interface]
-                                      |
-                                 [S3 Storage]
-```
+For detailed visual representations of the system architecture, see the comprehensive [Mermaid Architecture Diagrams](https://www.mermaidchart.com/app/projects/fe471217-3662-49dc-a088-14315a8a98e6/diagrams/ea4985b8-a402-4f65-b15d-482d02ccdb1b/version/v0.1/edit)
 
 #### 1. Ingestion Flow (High Scale)
 
@@ -28,12 +22,18 @@ A system designed to ingest, store, and query process data from multiple operati
 - **Amazon S3** for raw command output storage
   - Kafka messages contain S3 object references instead of full text
 
+- **Idempotency Strategy**
+  - Content hash (SHA-256) of raw command output included in each message
+  - Database unique constraint on (machine_id, timestamp, content_hash)
+  - Duplicate detection at ingestion service level prevents reprocessing
+  - Kafka message deduplication using producer idempotency features
+
 **Processing Architecture**
 
-- **Kubernetes-based Processing Workers**
-  - **Why Kubernetes**: Auto-scaling based on queue depth
-  - Parallel processing of command outputs
-  - Fault tolerance and resource management
+- **Horizontally Scalable Ingestion Services**
+  - Multiple service instances for high availability and throughput
+  - Load balancing across Kafka consumer groups
+  - Multiple workers if needed for the processing of the output and parsing
 - **Processing Pipeline**:
   1. Consume message from Kafka
   2. Download raw output from S3
@@ -83,22 +83,19 @@ processes:
 **Indexing Strategy**:
 
 - **Composite indexes**: (machine_id, timestamp) for time-series queries
-- **Partial indexes**: On active processes only
-- **Text search indexes**: On process names and commands using PostgreSQL FTS
-- **Hash indexes**: On machine_id and process_name for equality lookups
 
 #### 3. Query Interface (High Scale)
 
 **API Gateway + Microservices**
 
 - **GraphQL API** for flexible research queries
-  - **Why GraphQL**: Allows researchers to request exactly the data they need
+  - Allows researchers to request exactly the data they need
   - Type-safe schema for process and command data
   - Built-in query optimization and caching
 
 **Caching Layer - Redis**
 
-- **Why Redis**: Fast in-memory caching for frequent queries
+- Fast in-memory caching for frequent queries
 - Cache common aggregations and filtered datasets
 - Session management for research applications
 
@@ -111,12 +108,16 @@ processes:
 
 ### Assignment Implementation (Simplified)
 
+For detailed visual representations of the system architecture, see the comprehensive [Mermaid Architecture Diagrams](https://www.mermaidchart.com/app/projects/fe471217-3662-49dc-a088-14315a8a98e6/diagrams/57ad12aa-586e-416e-b613-4c645561b425/version/v0.1/edit)
+
 #### Technology Stack
 
 - **NestJS**: Modern Node.js framework with built-in support
 - **Kafka**: Message streaming (simplified single-node setup)
 - **PostgreSQL**: Relational database with admin interface
 - **Docker**: Containerization for easy development setup
+
+#### Development Tools
 
 - **TypeORM**: ORM for rapid development with decorators
 - **class-validator**: DTO validation
@@ -127,7 +128,7 @@ processes:
 [File Upload API] -> [Kafka Topic] -> [Consumer Service] -> [PostgreSQL]
 ```
 
-#### Implementation Decisions
+## Implementation Decisions
 
 **1. Data Flow Simplification**
 

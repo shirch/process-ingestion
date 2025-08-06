@@ -1,0 +1,76 @@
+graph TB
+subgraph "Data Collection Layer"
+DC1[Data Collector 1<br/>Linux Machines]
+DC2[Data Collector 2<br/>Windows Machines]
+DC3[Data Collector N<br/>macOS Machines]
+end
+
+    subgraph "Message Streaming Layer"
+        K[Apache Kafka<br/>Topics by OS Type]
+    end
+
+    subgraph "Storage Layer"
+        S3[Amazon S3<br/>Raw Command Output]
+    end
+
+    subgraph "Processing Layer"
+        IS1[Ingestion Service 1<br/>Consumer Group A]
+        IS2[Ingestion Service 2<br/>Consumer Group A]
+        IS3[Ingestion Service N<br/>Consumer Group A]
+    end
+
+    subgraph "Database Layer"
+        PG[(PostgreSQL<br/>Operational Data)]
+        SF[(Snowflake<br/>Analytics Data)]
+    end
+
+    subgraph "API Layer"
+        GQL[GraphQL API<br/>Research Queries]
+        CACHE[Redis Cache<br/>Query Optimization]
+    end
+
+    subgraph "Client Layer"
+        RA1[Research App 1<br/>Process Analytics]
+        RA2[Research App 2<br/>System Insights]
+    end
+
+    DC1 --> K
+    DC2 --> K
+    DC3 --> K
+
+    K --> IS1
+    K --> IS2
+    K --> IS3
+
+    IS1 --> S3
+    IS2 --> S3
+    IS3 --> S3
+
+    IS1 --> PG
+    IS2 --> PG
+    IS3 --> PG
+
+    PG --> SF
+    PG --> GQL
+    SF --> GQL
+
+    GQL --> CACHE
+    CACHE --> GQL
+
+    GQL --> RA1
+    GQL --> RA2
+
+    style DC1 fill:#ff6b6b
+    style DC2 fill:#ff6b6b
+    style DC3 fill:#ff6b6b
+    style K fill:#4ecdc4
+    style S3 fill:#f39c12
+    style IS1 fill:#45b7d1
+    style IS2 fill:#45b7d1
+    style IS3 fill:#45b7d1
+    style PG fill:#e67e22
+    style SF fill:#e67e22
+    style GQL fill:#9b59b6
+    style CACHE fill:#9b59b6
+    style RA1 fill:#34495e
+    style RA2 fill:#34495e
