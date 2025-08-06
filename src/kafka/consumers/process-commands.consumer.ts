@@ -1,7 +1,7 @@
-import { IngestCommandDto } from '@/commands/dto/ingest-command.dto';
-import { CommandsService } from '@/commands/services/commands.service';
 import { Controller, Logger } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { IngestCommandDto } from '../../commands/dto/ingest-command.dto';
+import { CommandsService } from '../../commands/services/commands.service';
 
 @Controller()
 export class ProcessCommandsConsumer {

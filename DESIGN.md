@@ -137,7 +137,20 @@ For detailed visual representations of the system architecture, see the comprehe
 
 #### Testing Strategy
 
-- **Unit Tests**: Parser logic and data transformation
-- **Integration Tests**: Database operations and API endpoints
-- **E2E Tests**: Full ingestion flow with sample data
-- **Performance Tests**: Bulk processing capabilities
+- **Current Coverage**: The core ingestion and processing functionalities are tested, specifically those covered by the following test files:
+  - `process-commands.consumer.spec.ts`
+  - `commands.service.spec.ts`
+  - `commands.controller.spec.ts`
+  - `parsing.service.spec.ts`
+
+The current tests focus on the main data flow (API → Service → Kafka Consumer → Parsing → Database) to ensure the basic ingestion pipeline works as expected.
+
+- **What Is Not Covered**:
+
+1. Distributed System Behavior
+2. S3 integration
+3. Kafka producer idempotency
+4. Bulk/batch ingestion under load
+5. Stress test the system with large volumes of data, measure ingestion latency, and verify database/index performance
+6. Horizontal scaling
+7. Analytics/query performance.
